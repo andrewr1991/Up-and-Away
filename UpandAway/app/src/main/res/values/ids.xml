@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Google Play game services IDs.
+Save this file as res/values/games-ids.xml in your project.
+-->
+<resources>
+    <!-- app_id -->
+    <string name="app_id" translatable="false">107449921906</string>
+    <!-- package_name -->
+    <string name="package_name" translatable="false">com.andrewvanpeter.upandaway</string>
+    <!-- achievement Time 1 -->
+    <string name="achievement_time_1" translatable="false">CgkI8uKOpJADEAIQAg</string>
+    <!-- leaderboard UpandAway -->
+    <string name="leaderboard_upandaway" translatable="false">CgkI8uKOpJADEAIQAQ</string>
+</resources>

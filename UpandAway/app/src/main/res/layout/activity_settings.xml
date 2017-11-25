@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.andrewvanpeter.upandaway.SettingsActivity">
+
+    <RelativeLayout
+        android:layout_width="386dp"
+        android:layout_height="518dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <Switch
+            android:id="@+id/musicSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="206dp"
+            android:layout_marginEnd="139dp"
+            android:text="Music" />
+
+        <Switch
+            android:id="@+id/soundFXSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/musicSwitch"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="78dp"
+            android:layout_marginEnd="98dp"
+            android:text="Sound Effects" />
+
+        <Button
+            android:id="@+id/easyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="75dp"
+            android:layout_marginStart="31dp"
+            android:text="Easy" />
+
+        <Button
+            android:id="@+id/mediumButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/easyButton"
+            android:layout_alignBottom="@+id/easyButton"
+            android:layout_alignEnd="@+id/musicSwitch"
+            android:text="Medium" />
+
+        <Button
+            android:id="@+id/hardButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/mediumButton"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="11dp"
+            android:text="Hard" />
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
