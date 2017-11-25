@@ -30,11 +30,14 @@ public class MainActivity extends AppCompatActivity {
         final Button highscoresButton = (Button) findViewById(R.id.highscoresButton);
         final Button settingsButton = (Button) findViewById(R.id.settingsButton);
 
+        Intent settingsDifficulty = getIntent();
+        final int difficulty = settingsDifficulty.getIntExtra("Difficulty", 0);
 
         //Listener for playButton
         playButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //start GameActivity
+                game.putExtra("Difficulty", difficulty);
                 startActivity(game);
             }
         });

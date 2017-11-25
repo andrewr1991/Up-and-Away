@@ -59,6 +59,9 @@ public class GameActivity extends Activity {
 
     int lives = 3;
 
+    //Star speed
+    int starSpeed = 10;
+
     int star1X;
     int star1Y;
     int star2X;
@@ -116,6 +119,17 @@ public class GameActivity extends Activity {
         Random random4 = new Random();
         star4X = random4.nextInt(720 - 50) + 1;
         star4Y = -250;
+
+        Intent settingsDifficulty = getIntent();
+        final int difficulty = settingsDifficulty.getIntExtra("Difficulty", 0);
+
+        //Set difficulty other than easy
+        if (difficulty == 2) {
+            starSpeed = 15;
+        }
+        else if (difficulty == 3) {
+            starSpeed = 20;
+        }
     }
 
     class SnakeView extends SurfaceView implements Runnable {
@@ -191,17 +205,17 @@ public class GameActivity extends Activity {
             }
 
             if (star1Live) {
-                star1Y += 10;
+                star1Y += starSpeed;
             }
             if (star2Live) {
-                star2Y += 10;
+                star2Y += starSpeed;
             }
             if (star3Live) {
-                star3Y += 10;
+                star3Y += starSpeed;
             }
 
             if (star4Live) {
-                star4Y += 10;
+                star4Y += starSpeed;
             }
 
             if (star1Y >= 1300) {
