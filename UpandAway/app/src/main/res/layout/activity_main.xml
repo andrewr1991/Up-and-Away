@@ -4,52 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/title_background"
     tools:context="com.andrewvanpeter.upandaway.MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/background_flat_720x1280" />
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="128dp"
+        android:layout_height="29dp"
+        android:layout_alignStart="@+id/playButton"
+        android:layout_below="@id/settingsButton"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/title_button_settings_up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playButton" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <Button
+        android:id="@+id/playButton"
+        style="?attr/imageButtonStyle"
+        android:layout_width="128dp"
+        android:layout_height="29dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="304dp"
+        android:background="@drawable/title_button_play_up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/playButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="94dp"
-            android:text="Play" />
+    <Button
+        android:id="@+id/helpButton"
+        android:layout_width="128dp"
+        android:layout_height="29dp"
+        android:layout_alignStart="@+id/settingsButton"
+        android:layout_below="@+id/settingsButton"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/title_button_help_up"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsButton"
+        app:layout_constraintVertical_bias="0.2" />
 
-        <Button
-            android:id="@+id/settingsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/playButton"
-            android:layout_below="@+id/highscoresButton"
-            android:layout_marginTop="51dp"
-            android:text="Settings" />
-
-        <Button
-            android:id="@+id/helpButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/settingsButton"
-            android:layout_below="@+id/settingsButton"
-            android:layout_marginTop="51dp"
-            android:text="Help" />
-
-        <Button
-            android:id="@+id/highscoresButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/playButton"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="39dp"
-            android:text="High Scores" />
-    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

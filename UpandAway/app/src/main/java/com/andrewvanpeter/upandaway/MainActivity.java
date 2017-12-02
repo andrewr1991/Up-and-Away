@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,6 +18,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_main);
 
         //Intent for GameActivity
@@ -27,17 +34,18 @@ public class MainActivity extends AppCompatActivity {
         //Button object for playButton
         final Button playButton = (Button) findViewById(R.id.playButton);
         final Button helpButton = (Button) findViewById(R.id.helpButton);
-        final Button highscoresButton = (Button) findViewById(R.id.highscoresButton);
         final Button settingsButton = (Button) findViewById(R.id.settingsButton);
 
-        Intent settingsDifficulty = getIntent();
-        final int difficulty = settingsDifficulty.getIntExtra("Difficulty", 0);
+        Intent settingsData = getIntent();
+        final int difficulty = settingsData.getIntExtra("Difficulty", 0);
+        final Boolean soundFX = settingsData.getBooleanExtra("soundFX", true);
 
         //Listener for playButton
         playButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //start GameActivity
                 game.putExtra("Difficulty", difficulty);
+                game.putExtra("soundFx", soundFX);
                 startActivity(game);
             }
         });
@@ -46,13 +54,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //start HelpActivity
                 startActivity(help);
-            }
-        });
-
-        highscoresButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //start HighScoresActivity
-                startActivity(highscores);
             }
         });
 

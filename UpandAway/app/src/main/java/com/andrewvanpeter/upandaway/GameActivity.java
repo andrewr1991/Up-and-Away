@@ -22,7 +22,7 @@ import java.util.TimerTask;
 
 public class GameActivity extends Activity {
     Canvas canvas;
-    SnakeView snakeView;
+    BunnyView bunnyView;
 
     //Initialize sound class
     SoundPlayer sound;
@@ -70,12 +70,15 @@ public class GameActivity extends Activity {
     int star3Y;
     int star4X;
     int star4Y;
+    int star5X;
+    int star5Y;
 
     //Star bools
     Boolean star1Live = false;
     Boolean star2Live = false;
     Boolean star3Live = false;
     Boolean star4Live = false;
+    Boolean star5Live = false;
 
     //The size in pixels of a place on the game board
     int blockSize;
@@ -91,8 +94,8 @@ public class GameActivity extends Activity {
 
         configureDisplay();
         sound = new SoundPlayer(this);
-        snakeView = new SnakeView(this);
-        setContentView(snakeView);
+        bunnyView = new BunnyView(this);
+        setContentView(bunnyView);
 
         int delay = 0; // do not delay
         int period = 1000; // repeat every 1 second
@@ -105,23 +108,28 @@ public class GameActivity extends Activity {
         }, delay, period);
 
         Random random1 = new Random();
-        star1X = random1.nextInt(720 - 50) + 1;
+        star1X = random1.nextInt(720 - 25) + 1;
         star1Y = -250;
 
         Random random2 = new Random();
-        star2X = random2.nextInt(720 - 50) + 1;
+        star2X = random2.nextInt(720 - 25) + 1;
         star2Y = -250;
 
         Random random3 = new Random();
-        star3X = random3.nextInt(720 - 50) + 1;
+        star3X = random3.nextInt(720 - 25) + 1;
         star3Y = -250;
 
         Random random4 = new Random();
-        star4X = random4.nextInt(720 - 50) + 1;
+        star4X = random4.nextInt(720 - 25) + 1;
         star4Y = -250;
 
-        Intent settingsDifficulty = getIntent();
-        final int difficulty = settingsDifficulty.getIntExtra("Difficulty", 0);
+        Random random5 = new Random();
+        star5X = random4.nextInt(720 - 25) + 1;
+        star5Y = -250;
+
+        Intent settingsData = getIntent();
+        final int difficulty = settingsData.getIntExtra("Difficulty", 0);
+        soundEffectsOn = settingsData.getBooleanExtra("soundFX", true);
 
         //Set difficulty other than easy
         if (difficulty == 2) {
@@ -132,13 +140,13 @@ public class GameActivity extends Activity {
         }
     }
 
-    class SnakeView extends SurfaceView implements Runnable {
+    class BunnyView extends SurfaceView implements Runnable {
         Thread ourThread = null;
         SurfaceHolder ourHolder;
-        volatile boolean playingSnake;
+        volatile boolean playingBunny;
         Paint paint;
 
-        public SnakeView(Context context) {
+        public BunnyView(Context context) {
             super(context);
             ourHolder = getHolder();
             paint = new Paint();
@@ -146,7 +154,7 @@ public class GameActivity extends Activity {
 
         @Override
         public void run() {
-            while (playingSnake) {
+            while (playingBunny) {
                 updateGame();
                 drawGame();
                 controlFPS();
@@ -186,6 +194,13 @@ public class GameActivity extends Activity {
                     star4Y = 1400;
                     lives--;
                 }
+
+                if ((bunnyXOrigin >= (star5X + 40) && bunnyXOrigin <= star5X + 170) && ((bunnyYOrigin + 50) >= star5Y + 75 && bunnyYOrigin <= (star5Y + 75) + 180)) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    star5Y = 1400;
+                    lives--;
+                }
             }
 
             if (time >= 4) {
@@ -204,12 +219,18 @@ public class GameActivity extends Activity {
                 star4Live = true;
             }
 
+            if (time >= 20) {
+                star5Live = true;
+            }
+
             if (star1Live) {
                 star1Y += starSpeed;
             }
+
             if (star2Live) {
                 star2Y += starSpeed;
             }
+
             if (star3Live) {
                 star3Y += starSpeed;
             }
@@ -218,28 +239,38 @@ public class GameActivity extends Activity {
                 star4Y += starSpeed;
             }
 
+            if (star5Live) {
+                star5Y += starSpeed;
+            }
+
             if (star1Y >= 1300) {
                 Random random1 = new Random();
-                star1X = random1.nextInt(675 - 25) + 1;
+                star1X = random1.nextInt(720 - 25) + 1;
                 star1Y = -250;
             }
 
             if (star2Y >= 1300) {
                 Random random2 = new Random();
-                star2X = random2.nextInt(675 - 1) + 1;
+                star2X = random2.nextInt(720 - 25) + 1;
                 star2Y = -250;
             }
 
             if (star3Y >= 1300) {
                 Random random3 = new Random();
-                star3X = random3.nextInt(675 - 1) + 1;
+                star3X = random3.nextInt(720 - 25) + 1;
                 star3Y = -250;
             }
 
             if (star4Y >= 1300) {
                 Random random4 = new Random();
-                star4X = random4.nextInt(675 - 1) + 1;
+                star4X = random4.nextInt(720 - 25) + 1;
                 star4Y = -250;
+            }
+
+            if (star5Y >= 1300) {
+                Random random4 = new Random();
+                star5X = random4.nextInt(720 - 25) + 1;
+                star5Y = -250;
             }
 
             //Bunny movement updates
@@ -280,10 +311,10 @@ public class GameActivity extends Activity {
                 canvas.drawBitmap(starBitmap, star2X, star2Y, paint);
                 canvas.drawBitmap(starBitmap, star3X, star3Y, paint);
                 canvas.drawBitmap(starBitmap, star4X, star4Y, paint);
+                canvas.drawBitmap(starBitmap, star5X, star5Y, paint);
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }
-
         }
 
         public void controlFPS() {
@@ -304,10 +335,8 @@ public class GameActivity extends Activity {
             lastFrameTime = System.currentTimeMillis();
         }
 
-
-
         public void pause() {
-            playingSnake = false;
+            playingBunny = false;
             try {
                 ourThread.join();
             } catch (InterruptedException e) {
@@ -315,7 +344,7 @@ public class GameActivity extends Activity {
         }
 
         public void resume() {
-            playingSnake = true;
+            playingBunny = true;
             ourThread = new Thread(this);
             ourThread.start();
         }
@@ -345,7 +374,7 @@ public class GameActivity extends Activity {
     protected void onStop() {
         super.onStop();
         while (true) {
-            snakeView.pause();
+            bunnyView.pause();
             break;
         }
         finish();
@@ -353,16 +382,16 @@ public class GameActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        snakeView.resume();
+        bunnyView.resume();
     }
     @Override
     protected void onPause() {
         super.onPause();
-        snakeView.pause();
+        bunnyView.pause();
     }
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            snakeView.pause();
+            bunnyView.pause();
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
             finish();
