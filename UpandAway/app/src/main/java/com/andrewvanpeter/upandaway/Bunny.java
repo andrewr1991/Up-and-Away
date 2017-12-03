@@ -4,8 +4,10 @@ public class Bunny {
     private float bunnyX;
     private float bunnyY;
     private int lives = 3;
-    Boolean bunnyIsMovingRight = false;
-    Boolean bunnyIsMovingLeft = false;
+    private Boolean bunnyIsMovingRight = false;
+    private Boolean bunnyIsMovingLeft = false;
+    private Boolean invincible = false;
+
 
     public Bunny(float bunnyX, float bunnyY){
         this.bunnyX = bunnyX;
@@ -46,5 +48,13 @@ public class Bunny {
 
     public void setBunnyIsMovingLeft(Boolean change) {
         bunnyIsMovingLeft = change;
+    }
+
+    public Boolean getInvincible() {
+        return invincible;
+    }
+
+    public void setInvincible(Boolean change) {
+        invincible = change;
     }
 }

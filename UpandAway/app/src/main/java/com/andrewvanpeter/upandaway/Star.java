@@ -5,6 +5,7 @@ public class Star {
     private float starY;
     private Boolean starLive = false;
     private float starSpeed = 10;
+    private Boolean visible = true;
 
     Star(float starX, float starY) {
         this.starX = starX;
@@ -49,5 +50,13 @@ public class Star {
 
     public void setStarLive(Boolean change) {
         starLive = change;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean change) {
+        visible = change;
     }
 }

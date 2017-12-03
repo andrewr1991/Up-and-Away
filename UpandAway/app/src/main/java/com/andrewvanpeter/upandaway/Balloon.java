@@ -4,7 +4,7 @@ public class Balloon {
     private float balloonX;
     private float balloonY;
     private float balloonSpeed;
-    Boolean balloonLive = false;
+    private Boolean balloonLive = false;
 
     Balloon(float balloonX, float balloonY) {
         this.balloonX = balloonX;
