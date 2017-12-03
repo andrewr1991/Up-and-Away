@@ -22,7 +22,7 @@ public class Bunny {
         return bunnyY;
     }
 
-    public void setBunnyX(float newX) {
+    public void setBunnyX(double newX) {
         bunnyX += newX;
     }
 

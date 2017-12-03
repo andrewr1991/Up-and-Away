@@ -1,33 +1,33 @@
 package com.andrewvanpeter.upandaway;
 
 public class Balloon {
-    private float balloonX;
-    private float balloonY;
-    private float balloonSpeed;
+    private double balloonX;
+    private double balloonY;
+    private double balloonSpeed;
     private Boolean balloonLive = false;
 
-    Balloon(float balloonX, float balloonY) {
+    Balloon(double balloonX, double balloonY) {
         this.balloonX = balloonX;
         this.balloonY = balloonY;
     }
 
-    public float getBalloonX() {
+    public double getBalloonX() {
         return balloonX;
     }
 
-    public float getCarrotY() {
+    public double getCarrotY() {
         return balloonY;
     }
 
-    public void setCarrotX(float balloonX) {
+    public void setCarrotX(double balloonX) {
         this.balloonX = balloonX;
     }
 
-    public void setCarrotY(float balloonY) {
+    public void setCarrotY(double balloonY) {
         this.balloonY = balloonY;
     }
 
-    public void setCarrotSpeed(float balloonSpeed) {
+    public void setCarrotSpeed(double balloonSpeed) {
         this.balloonSpeed = balloonSpeed;
     }
 
@@ -35,7 +35,7 @@ public class Balloon {
         return balloonLive;
     }
 
-    public void setBalloonLive(Boolean change) {
-        balloonLive = change;
+    public void setBalloonLive(Boolean balloonLive) {
+        this.balloonLive = balloonLive;
     }
 }
