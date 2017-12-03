@@ -19,12 +19,12 @@ public class Star {
         return starY;
     }
 
-    public void setStarX(float newX) {
-        starX = newX;
+    public void setStarX(float starX) {
+        this.starX = starX;
     }
 
-    public void setStarY(float newY) {
-        starY = newY;
+    public void setStarY(float starY) {
+        this.starY = starY;
     }
 
     public void addStarY(float additionalY) {
@@ -35,8 +35,12 @@ public class Star {
         return starSpeed;
     }
 
-    public void setStarSpeed(float newSpeed) {
-        starSpeed += newSpeed;
+    public void setStarSpeed(float StarSpeed) {
+        this.starSpeed = StarSpeed;
+    }
+
+    public void addStarSpeed(float additionalSpeed) {
+        starSpeed += additionalSpeed;
     }
 
     public Boolean getStarLive() {
