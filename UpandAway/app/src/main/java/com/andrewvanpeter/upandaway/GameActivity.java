@@ -1,3 +1,5 @@
+//Base code taken from Learning Java by Building Android Games by John Horton
+
 package com.andrewvanpeter.upandaway;
 
 import android.app.Activity;
@@ -24,8 +26,27 @@ public class GameActivity extends Activity {
     Canvas canvas;
     BunnyView bunnyView;
 
-    //Initialize sound class
+    //Initialize game objects
     SoundPlayer sound;
+    Bunny bunny = new Bunny (320, 865);
+
+    int startingStarY = -250;
+    Random random = new Random();
+
+    int randX1 = random.nextInt(720 - 25) + 1;
+    Star star1 = new Star(randX1, startingStarY);
+
+    int randX2 = random.nextInt(720 - 25) + 1;
+    Star star2 = new Star(randX2, startingStarY);
+
+    int randX3 = random.nextInt(720 - 25) + 1;
+    Star star3 = new Star(randX3, startingStarY);
+
+    int randX4 = random.nextInt(720 - 25) + 1;
+    Star star4 = new Star(randX4, startingStarY);
+
+    int randX5 = random.nextInt(720 - 25) + 1;
+    Star star5 = new Star(randX5, startingStarY);
 
     Bitmap bunnyBitMap;
     Bitmap starBitmap;
@@ -33,11 +54,6 @@ public class GameActivity extends Activity {
     Bitmap carrotBitmap;
     Bitmap balloonBitmap;
     Bitmap blackholeBitmap;
-
-    //to start or stop bunny movement
-    Boolean bunnyIsMovingRight = false;
-    Boolean bunnyIsMovingLeft = false;
-
 
     int screenWidth;
     int screenHeight;
@@ -50,42 +66,17 @@ public class GameActivity extends Activity {
     long lastFrameTime;
     int fps;
 
-    //Game objects
-    float bunnyX = 320;
-    float bunnyY = 865;
+    /* --- Carrot Variables --- */
 
     //Carrot Boolean
     Boolean invincible = false;
-
-    int lives = 3;
-
-    //Star speed
-    int starSpeed = 10;
-
-    int star1X;
-    int star1Y;
-    int star2X;
-    int star2Y;
-    int star3X;
-    int star3Y;
-    int star4X;
-    int star4Y;
-    int star5X;
-    int star5Y;
-
-    //Star bools
-    Boolean star1Live = false;
-    Boolean star2Live = false;
-    Boolean star3Live = false;
-    Boolean star4Live = false;
-    Boolean star5Live = false;
 
     //The size in pixels of a place on the game board
     int blockSize;
     int numBlocksWide;
     int numBlocksHigh;
 
-    //Timer variables
+    //Timer variable
     int time = 0;
 
     @Override
@@ -107,36 +98,16 @@ public class GameActivity extends Activity {
             }
         }, delay, period);
 
-        Random random1 = new Random();
-        star1X = random1.nextInt(720 - 25) + 1;
-        star1Y = -250;
-
-        Random random2 = new Random();
-        star2X = random2.nextInt(720 - 25) + 1;
-        star2Y = -250;
-
-        Random random3 = new Random();
-        star3X = random3.nextInt(720 - 25) + 1;
-        star3Y = -250;
-
-        Random random4 = new Random();
-        star4X = random4.nextInt(720 - 25) + 1;
-        star4Y = -250;
-
-        Random random5 = new Random();
-        star5X = random4.nextInt(720 - 25) + 1;
-        star5Y = -250;
-
         Intent settingsData = getIntent();
         final int difficulty = settingsData.getIntExtra("Difficulty", 0);
         soundEffectsOn = settingsData.getBooleanExtra("soundFX", true);
 
         //Set difficulty other than easy
         if (difficulty == 2) {
-            starSpeed = 15;
+            setStarSpeed(15);
         }
         else if (difficulty == 3) {
-            starSpeed = 20;
+            setStarSpeed(20);
         }
     }
 
@@ -162,132 +133,122 @@ public class GameActivity extends Activity {
         }
 
         public void updateGame() {
-            float bunnyXOrigin = bunnyX + 41;
-            float bunnyYOrigin = bunnyY + 129;
+            float bunnyXOrigin = bunny.getBunnyX() + 41;
+            float bunnyYOrigin = bunny.getBunnyY() + 129;
 
             //If the player has not collided with a carrot
             if (!invincible) {
-                if ((bunnyXOrigin >= (star1X + 40) && bunnyXOrigin <= star1X + 170) && ((bunnyYOrigin + 50) >= star1Y + 75 && bunnyYOrigin <= (star1Y + 75) + 180)) {
+                if ((bunnyXOrigin >= (star1.getStarX() + 40) && bunnyXOrigin <= star1.getStarX() + 170) && ((bunnyYOrigin + 50) >= star1.getStarY() + 75 && bunnyYOrigin <= (star1.getStarY() + 75) + 180)) {
                     if (soundEffectsOn)
                         sound.playHitSound();
-                    star1Y = 1400;
-                    lives--;
+                    star1.setStarY(1400);
+                    bunny.setBunnyLives(-1);
                 }
 
-                if ((bunnyXOrigin >= (star2X + 40) && bunnyXOrigin <= star2X + 170) && ((bunnyYOrigin + 50) >= star2Y + 75 && bunnyYOrigin <= (star2Y + 75) + 180)) {
+                if ((bunnyXOrigin >= (star2.getStarX() + 40) && bunnyXOrigin <= star2.getStarX() + 170) && ((bunnyYOrigin + 50) >= star2.getStarY() + 75 && bunnyYOrigin <= (star2.getStarY() + 75) + 180)) {
                     if (soundEffectsOn)
                         sound.playHitSound();
-                    star2Y = 1400;
-                    lives--;
+                    star2.setStarY(1400);
+                    bunny.setBunnyLives(-1);
                 }
 
-                if ((bunnyXOrigin >= (star3X + 40) && bunnyXOrigin <= star3X + 170) && ((bunnyYOrigin + 50) >= star3Y + 75 && bunnyYOrigin <= (star3Y + 75) + 180)) {
+                if ((bunnyXOrigin >= (star3.getStarX() + 40) && bunnyXOrigin <= star3.getStarX() + 170) && ((bunnyYOrigin + 50) >= star3.getStarY() + 75 && bunnyYOrigin <= (star3.getStarY() + 75) + 180)) {
                     if (soundEffectsOn)
                         sound.playHitSound();
-                    star3Y = 1400;
-                    lives--;
+                    star3.setStarY(1400);
+                    bunny.setBunnyLives(-1);
                 }
 
-                if ((bunnyXOrigin >= (star4X + 40) && bunnyXOrigin <= star4X + 170) && ((bunnyYOrigin + 50) >= star4Y + 75 && bunnyYOrigin <= (star4Y + 75) + 180)) {
+                if ((bunnyXOrigin >= (star4.getStarX() + 40) && bunnyXOrigin <= star4.getStarX() + 170) && ((bunnyYOrigin + 50) >= star4.getStarY() + 75 && bunnyYOrigin <= (star4.getStarY() + 75) + 180)) {
                     if (soundEffectsOn)
                         sound.playHitSound();
-                    star4Y = 1400;
-                    lives--;
+                    star4.setStarY(1400);
+                    bunny.setBunnyLives(-1);
                 }
 
-                if ((bunnyXOrigin >= (star5X + 40) && bunnyXOrigin <= star5X + 170) && ((bunnyYOrigin + 50) >= star5Y + 75 && bunnyYOrigin <= (star5Y + 75) + 180)) {
+                if ((bunnyXOrigin >= (star5.getStarX() + 40) && bunnyXOrigin <= star5.getStarX() + 170) && ((bunnyYOrigin + 50) >= star5.getStarY() + 75 && bunnyYOrigin <= (star5.getStarY() + 75) + 180)) {
                     if (soundEffectsOn)
                         sound.playHitSound();
-                    star5Y = 1400;
-                    lives--;
+                    star5.setStarY(1400);
+                    bunny.setBunnyLives(-1);
                 }
             }
 
             if (time >= 4) {
-                star1Live = true;
+                star1.setStarLive(true);
             }
 
             if (time >= 8) {
-                star2Live = true;
+                star2.setStarLive(true);
             }
 
             if (time >= 12) {
-                star3Live = true;
+                star3.setStarLive(true);
             }
 
             if (time >= 16) {
-                star4Live = true;
+                star4.setStarLive(true);
             }
 
             if (time >= 20) {
-                star5Live = true;
+                star5.setStarLive(true);
             }
 
-            if (star1Live) {
-                star1Y += starSpeed;
+            if (star1.getStarLive()) {
+                star1.addStarY(star1.getStarSpeed());
             }
 
-            if (star2Live) {
-                star2Y += starSpeed;
+            if (star2.getStarLive()) {
+                star2.addStarY(star2.getStarSpeed());
             }
 
-            if (star3Live) {
-                star3Y += starSpeed;
+            if (star3.getStarLive()) {
+                star3.addStarY(star3.getStarSpeed());
             }
 
-            if (star4Live) {
-                star4Y += starSpeed;
+            if (star4.getStarLive()) {
+                star4.addStarY(star4.getStarSpeed());
             }
 
-            if (star5Live) {
-                star5Y += starSpeed;
+            if (star5.getStarLive()) {
+                star5.addStarY(star5.getStarSpeed());
             }
 
-            if (star1Y >= 1300) {
-                Random random1 = new Random();
-                star1X = random1.nextInt(720 - 25) + 1;
-                star1Y = -250;
+            if (star1.getStarY() >= 1300) {
+                setStarPosition(star1);
             }
 
-            if (star2Y >= 1300) {
-                Random random2 = new Random();
-                star2X = random2.nextInt(720 - 25) + 1;
-                star2Y = -250;
+            if (star2.getStarY() >= 1300) {
+                setStarPosition(star2);
             }
 
-            if (star3Y >= 1300) {
-                Random random3 = new Random();
-                star3X = random3.nextInt(720 - 25) + 1;
-                star3Y = -250;
+            if (star3.getStarY() >= 1300) {
+                setStarPosition(star3);
             }
 
-            if (star4Y >= 1300) {
-                Random random4 = new Random();
-                star4X = random4.nextInt(720 - 25) + 1;
-                star4Y = -250;
+            if (star4.getStarY() >= 1300) {
+                setStarPosition(star4);
             }
 
-            if (star5Y >= 1300) {
-                Random random4 = new Random();
-                star5X = random4.nextInt(720 - 25) + 1;
-                star5Y = -250;
+            if (star5.getStarY() >= 1300) {
+                setStarPosition(star5);
             }
 
             //Bunny movement updates
-            if (bunnyIsMovingRight) {
-                bunnyX += 15;
+            if (bunny.getBunnyIsMovingRight()) {
+                bunny.setBunnyX(15);
             }
 
-            if (bunnyIsMovingLeft) {
-                bunnyX -= 15;
+            if (bunny.getBunnyIsMovingLeft()) {
+                bunny.setBunnyX(-15);
             }
 
             if (bunnyXOrigin <= 50) {
-                bunnyIsMovingLeft = false;
+                bunny.setBunnyIsMovingRight(false);
             }
 
             if (bunnyXOrigin + 100 >= 775) {
-                bunnyIsMovingRight = false;
+                bunny.setBunnyIsMovingLeft(false);
             }
         }
 
@@ -302,16 +263,17 @@ public class GameActivity extends Activity {
                 paint.setColor(Color.argb(255, 255, 255, 255));
                 paint.setTextSize(topGap/2);
                 canvas.drawText("Score:" + time, 10, topGap-6, paint);
+                canvas.drawText("Lives:" + bunny.getBunnyLives(), 10, 30, paint);
 
                 //Draw the bunny
-                canvas.drawBitmap(bunnyBitMap, bunnyX, bunnyY, paint);
+                canvas.drawBitmap(bunnyBitMap, bunny.getBunnyX(), bunny.getBunnyY(), paint);
 
                 //draw the star
-                canvas.drawBitmap(starBitmap, star1X, star1Y, paint);
-                canvas.drawBitmap(starBitmap, star2X, star2Y, paint);
-                canvas.drawBitmap(starBitmap, star3X, star3Y, paint);
-                canvas.drawBitmap(starBitmap, star4X, star4Y, paint);
-                canvas.drawBitmap(starBitmap, star5X, star5Y, paint);
+                canvas.drawBitmap(starBitmap, star1.getStarX(), star1.getStarY(), paint);
+                canvas.drawBitmap(starBitmap, star2.getStarX(), star2.getStarY(), paint);
+                canvas.drawBitmap(starBitmap, star3.getStarX(), star3.getStarY(), paint);
+                canvas.drawBitmap(starBitmap, star4.getStarX(), star4.getStarY(), paint);
+                canvas.drawBitmap(starBitmap, star5.getStarX(), star5.getStarY(), paint);
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }
@@ -354,17 +316,17 @@ public class GameActivity extends Activity {
             switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
                     if (motionEvent.getX() >= screenWidth / 2) {
-                        bunnyIsMovingRight = true;
-                        bunnyIsMovingLeft = false;
+                        bunny.setBunnyIsMovingRight(true);
+                        bunny.setBunnyIsMovingLeft(false);
                     } else {
-                        bunnyIsMovingRight = false;
-                        bunnyIsMovingLeft = true;
+                        bunny.setBunnyIsMovingRight(false);
+                        bunny.setBunnyIsMovingLeft(true);
                     }
                     break;
 
                 case MotionEvent.ACTION_UP:
-                    bunnyIsMovingRight = false;
-                    bunnyIsMovingLeft = false;
+                    bunny.setBunnyIsMovingRight(false);
+                    bunny.setBunnyIsMovingLeft(false);
             }
             return true;
         }
@@ -430,5 +392,22 @@ public class GameActivity extends Activity {
         bunnyBitMap = Bitmap.createScaledBitmap(bunnyBitMap, 80, 200, false);
         starBitmap = Bitmap.createScaledBitmap(starBitmap, 200, 200, false);
 
+    }
+
+    public void setStarPosition(Star star) {
+        Random random = new Random();
+        int starX = random.nextInt(720 - 25) + 1;
+        int starY = -250;
+
+        star.setStarX(starX);
+        star.setStarY(starY);
+    }
+
+    public void setStarSpeed(float speed) {
+        star1.setStarSpeed(speed);
+        star2.setStarSpeed(speed);
+        star3.setStarSpeed(speed);
+        star4.setStarSpeed(speed);
+        star5.setStarSpeed(speed);
     }
 }

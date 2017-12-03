@@ -1,3 +1,5 @@
+//Base code taken from Learning Java by Building Android Games by John Horton
+
 package com.andrewvanpeter.upandaway;
 
 import android.content.Intent;
@@ -12,7 +14,6 @@ public class MainActivity extends AppCompatActivity {
 
     Intent game;
     Intent help;
-    Intent highscores;
     Intent settings;
 
     @Override
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         //Intent for GameActivity
         game = new Intent(this, GameActivity.class);
         help = new Intent(this, HelpActivity.class);
-        highscores = new Intent(this, HighScoresActivity.class);
         settings = new Intent(this, SettingsActivity.class);
 
         //Button object for playButton
@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         //Listener for playButton
         playButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Change button background
+                playButton.setBackgroundResource(R.drawable.title_button_play_down);
+
                 //start GameActivity
                 game.putExtra("Difficulty", difficulty);
                 game.putExtra("soundFx", soundFX);
@@ -52,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
         helpButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Change button background
+                helpButton.setBackgroundResource(R.drawable.title_button_help_down);
+
                 //start HelpActivity
                 startActivity(help);
             }
@@ -59,7 +65,11 @@ public class MainActivity extends AppCompatActivity {
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Change button background
+                settingsButton.setBackgroundResource(R.drawable.title_button_settings_down);
+
                 //start SettingsActivity
+                settings.putExtra("Difficulty", difficulty);
                 startActivity(settings);
             }
         });
