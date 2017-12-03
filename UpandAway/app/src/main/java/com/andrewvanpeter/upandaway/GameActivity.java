@@ -52,7 +52,7 @@ public class GameActivity extends Activity {
     Star star6 = new Star(randStarX6, startingAIY);
 
     int randCarrotX = random.nextInt(720 - 25) + 1;
-    Carrot carrot = new Carrot(randCarrotX, startingAIY);
+    Carrot carrot = new Carrot(randCarrotX, -70);
 
     Bitmap bunnyBitMap;
     Bitmap starBitmap;
@@ -81,6 +81,7 @@ public class GameActivity extends Activity {
     int time = 0;
     int timer = 0;
     Boolean timeLoop = true;
+    Boolean carrotLoop = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,8 +155,11 @@ public class GameActivity extends Activity {
             if (time >= 19)
                 star6.setStarLive(true);
 
-            if (time >= 5)
-                carrot.setCarrotLive(true);
+            if (carrot.getCarrotStart())
+                if (time >= 5) {
+                    carrot.setCarrotLive(true);
+                    carrot.setCarrotStart(false);
+                }
 
             double bunnyXOrigin = bunny.getBunnyX() + 41;
             double bunnyYOrigin = bunny.getBunnyY() + 129;
@@ -210,17 +214,34 @@ public class GameActivity extends Activity {
                     sound.playHitSound();
                 bunny.setInvincible(true);
                 carrot.setVisible(false);
+                carrot.setCarrotLive(false);
+
+                int newRandCarrotX = random.nextInt(720 - 25) + 1;
+                carrot.setCarrotX(newRandCarrotX);
+                carrot.setCarrotY(-80);
             }
 
             //Bunny invincibility code
             if (bunny.getInvincible()) {
                 while (timeLoop) {
-                    int timer = time;
+                    timer = time;
                     timeLoop = false;
                 }
                 if ((time - timer) == 10) {
                     bunny.setInvincible(false);
                     timeLoop = true;
+                }
+            }
+
+            //Carrot respawn code
+            if (carrot.getCarrotY() == (-80)) {
+                while (carrotLoop) {
+                    int timer = time;
+                    carrotLoop = false;
+                }
+                if ((time - timer) == 30) {
+                    carrot.setCarrotLive(true);
+                    carrotLoop = true;
                 }
             }
 
@@ -244,8 +265,10 @@ public class GameActivity extends Activity {
                 star6.addStarY(star6.getStarSpeed());
 
             //Carrot movement code
-            if (carrot.getCarrotLive())
+            if (carrot.getCarrotLive()) {
                 carrot.addCarrotY(carrot.getCarrotSpeed());
+                carrot.setVisible(true);
+            }
 
             increaseStarSpeed(star1, time);
             increaseStarSpeed(star2, time);
@@ -283,8 +306,6 @@ public class GameActivity extends Activity {
                 setStarPosition(star6);
                 star6.setVisible(true);
             }
-
-            //if ()
 
             //Bunny movement updates
             if (bunny.getBunnyIsMovingRight()) {

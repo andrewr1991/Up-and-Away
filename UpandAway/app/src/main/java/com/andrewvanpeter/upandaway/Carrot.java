@@ -6,6 +6,7 @@ public class Carrot {
     private double carrotSpeed = 10;
     private Boolean carrotLive = false;
     private Boolean visible = true;
+    private Boolean carrotStart = true;
 
     Carrot(float carrotX, float carrotY) {
         this.carrotX = carrotX;
@@ -54,5 +55,13 @@ public class Carrot {
 
     public void setVisible(Boolean visible) {
         this.visible = visible;
+    }
+
+    public Boolean getCarrotStart() {
+        return carrotStart;
+    }
+
+    public void setCarrotStart(Boolean carrotStart) {
+        this.carrotStart = carrotStart;
     }
 }
