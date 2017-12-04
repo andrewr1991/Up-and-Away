@@ -13,13 +13,14 @@ public class HelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
 
-        Button backToMainButton = (Button) findViewById(R.id.backToMainButton);
+        final Button backButton = (Button) findViewById(R.id.backButton);
 
         final Intent backToMain = new Intent(this, MainActivity.class);
 
         //Back to main menu
-        backToMainButton.setOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                backButton.setBackgroundResource(R.drawable.settings_donedown);
                 startActivity(backToMain);
             }
         });

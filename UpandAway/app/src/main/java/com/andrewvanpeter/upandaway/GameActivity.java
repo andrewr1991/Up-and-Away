@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -18,6 +19,8 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,7 +31,9 @@ public class GameActivity extends Activity {
 
     //Initialize game objects
     SoundPlayer sound;
-    Bunny bunny = new Bunny (320, 865);
+    MediaPlayer music;
+
+    Bunny bunny = new Bunny (320, 890);
 
     int startingAIY = -250;
     Random random = new Random();
@@ -96,6 +101,7 @@ public class GameActivity extends Activity {
 
         configureDisplay();
         sound = new SoundPlayer(this);
+
         bunnyView = new BunnyView(this);
         setContentView(bunnyView);
 
@@ -113,6 +119,11 @@ public class GameActivity extends Activity {
         final int difficulty = settingsData.getIntExtra("Difficulty", 1);
         soundEffectsOn = settingsData.getBooleanExtra("soundFX", true);
         musicOn = settingsData.getBooleanExtra("music", true);
+
+        //Play music
+        music = MediaPlayer.create(this, R.raw.lullaby);
+        if (musicOn)
+            music.start();
 
         //Set difficulty other than easy
         if (difficulty == 2) {
@@ -145,6 +156,10 @@ public class GameActivity extends Activity {
         }
 
         public void updateGame() {
+            if (bunny.getBunnyLives() == 0) {
+                musicOn = false;
+            }
+
             if (time >= 4)
                 star1.setStarLive(true);
 
