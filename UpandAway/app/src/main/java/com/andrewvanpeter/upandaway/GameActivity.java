@@ -70,7 +70,8 @@ public class GameActivity extends Activity {
     int topGap;
 
     //sound settings
-    Boolean soundEffectsOn = true;
+    Boolean soundEffectsOn;
+    Boolean musicOn;
 
     //stats
     long lastFrameTime;
@@ -108,8 +109,9 @@ public class GameActivity extends Activity {
         }, delay, period);
 
         Intent settingsData = getIntent();
-        final int difficulty = settingsData.getIntExtra("Difficulty", 0);
-        //soundEffectsOn = settingsData.getBooleanExtra("soundFX", true);
+        final int difficulty = settingsData.getIntExtra("Difficulty", 1);
+        soundEffectsOn = settingsData.getBooleanExtra("soundFX", true);
+        musicOn = settingsData.getBooleanExtra("music", true);
 
         //Set difficulty other than easy
         if (difficulty == 2) {

@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
         Intent settingsData = getIntent();
         final int difficulty = settingsData.getIntExtra("Difficulty", 0);
-        //final Boolean soundFX = settingsData.getBooleanExtra("soundFX", true);
+        final Boolean soundFXOn = settingsData.getBooleanExtra("soundFX", false);
+        final Boolean musicOn = settingsData.getBooleanExtra("music", false);
 
         //Listener for playButton
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
                 //start GameActivity
                 game.putExtra("Difficulty", difficulty);
-                //game.putExtra("soundFx", soundFX);
+                game.putExtra("soundFX", soundFXOn);
+                game.putExtra("music", musicOn);
                 startActivity(game);
             }
         });
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
                 //start SettingsActivity
                 settings.putExtra("Difficulty", difficulty);
+                settings.putExtra("soundFx", soundFXOn);
+                settings.putExtra("music", musicOn);
                 startActivity(settings);
             }
         });
