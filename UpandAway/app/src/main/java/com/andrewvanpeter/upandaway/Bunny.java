@@ -30,8 +30,8 @@ public class Bunny {
         return lives;
     }
 
-    public void setBunnyLives(int additionalLife) {
-        lives += additionalLife;
+    public void addBunnyLife(int life) {
+        lives += life;
     }
 
     public Boolean getBunnyIsMovingRight() {
