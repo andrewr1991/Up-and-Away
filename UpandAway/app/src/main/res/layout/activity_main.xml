@@ -15,7 +15,7 @@
         android:layout_below="@id/settingsButton"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/title_button_settings_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.82"
@@ -31,7 +31,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="304dp"
+        android:layout_marginTop="376dp"
         android:background="@drawable/title_button_play_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.82"
@@ -54,6 +54,6 @@
         app:layout_constraintHorizontal_bias="0.82"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsButton"
-        app:layout_constraintVertical_bias="0.28" />
+        app:layout_constraintVertical_bias="0.338" />
 
 </android.support.constraint.ConstraintLayout>

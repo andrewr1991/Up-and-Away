@@ -28,8 +28,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         Intent settingsData = getIntent();
         difficulty = settingsData.getIntExtra("Difficulty", 0);
-        soundFXOn = settingsData.getBooleanExtra("soundFX", false);
-        musicOn = settingsData.getBooleanExtra("music", false);
+        soundFXOn = settingsData.getBooleanExtra("soundFX", true);
+        musicOn = settingsData.getBooleanExtra("music", true);
 
         switch(difficulty) {
             case 1:

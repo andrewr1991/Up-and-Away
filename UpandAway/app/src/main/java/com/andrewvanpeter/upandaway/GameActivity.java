@@ -11,7 +11,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -58,7 +57,9 @@ public class GameActivity extends Activity {
     int randBalloonX = random.nextInt(720 - 25) + 1;
     Balloon balloon = new Balloon(350, -120);
 
-    Bitmap bunnyBitMap;
+    Bitmap bunnyBitMap1;
+    Bitmap bunnyBitMap2;
+    Bitmap bunnyBitMap3;
     Bitmap starBitmap;
     Bitmap backgroundBitMap;
     Bitmap carrotBitmap;
@@ -177,76 +178,8 @@ public class GameActivity extends Activity {
             double bunnyXOrigin = bunny.getBunnyX() + 41;
             double bunnyYOrigin = bunny.getBunnyY() + 129;
 
-            //If the player has not collided with a carrot
-            if (!bunny.getInvincible()) {
-                if ((bunnyXOrigin >= (star1.getStarX() + 40) && bunnyXOrigin <= star1.getStarX() + 170) && ((bunnyYOrigin + 50) >= star1.getStarY() + 75 && bunnyYOrigin <= (star1.getStarY() + 75) + 180) && star1.getVisible()) {
-                    if (soundEffectsOn)
-                        sound.playHitSound();
-                    bunny.addBunnyLife(-1);
-                    star1.setVisible(false);
-                }
-
-                if ((bunnyXOrigin >= (star2.getStarX() + 40) && bunnyXOrigin <= star2.getStarX() + 170) && ((bunnyYOrigin + 50) >= star2.getStarY() + 75 && bunnyYOrigin <= (star2.getStarY() + 75) + 180) && star2.getVisible()) {
-                    if (soundEffectsOn)
-                        sound.playHitSound();
-                    bunny.addBunnyLife(-1);
-                    star2.setVisible(false);
-                }
-
-                if ((bunnyXOrigin >= (star3.getStarX() + 40) && bunnyXOrigin <= star3.getStarX() + 170) && ((bunnyYOrigin + 50) >= star3.getStarY() + 75 && bunnyYOrigin <= (star3.getStarY() + 75) + 180) && star3.getVisible()) {
-                    if (soundEffectsOn)
-                        sound.playHitSound();
-                    bunny.addBunnyLife(-1);
-                    star3.setVisible(false);
-                }
-
-                if ((bunnyXOrigin >= (star4.getStarX() + 40) && bunnyXOrigin <= star4.getStarX() + 170) && ((bunnyYOrigin + 50) >= star4.getStarY() + 75 && bunnyYOrigin <= (star4.getStarY() + 75) + 180) && star4.getVisible()) {
-                    if (soundEffectsOn)
-                        sound.playHitSound();
-                    bunny.addBunnyLife(-1);
-                    star4.setVisible(false);
-                }
-
-                if ((bunnyXOrigin >= (star5.getStarX() + 40) && bunnyXOrigin <= star5.getStarX() + 170) && ((bunnyYOrigin + 50) >= star5.getStarY() + 75 && bunnyYOrigin <= (star5.getStarY() + 75) + 180) && star5.getVisible()) {
-                    if (soundEffectsOn)
-                        sound.playHitSound();
-                    bunny.addBunnyLife(-1);
-                    star5.setVisible(false);
-                }
-
-                if ((bunnyXOrigin >= (star6.getStarX() + 40) && bunnyXOrigin <= star6.getStarX() + 170) && ((bunnyYOrigin + 50) >= star6.getStarY() + 75 && bunnyYOrigin <= (star6.getStarY() + 75) + 180) && star6.getVisible()) {
-                    if (soundEffectsOn)
-                        sound.playHitSound();
-                    bunny.addBunnyLife(-1);
-                    star6.setVisible(false);
-                }
-            }
-
-            //Carrot collision code
-            if ((bunnyXOrigin >= (carrot.getCarrotX() - 30)) && (bunnyXOrigin <= (carrot.getCarrotX() + 100)) && ((bunnyYOrigin + 50) >= (carrot.getCarrotY())) && (bunnyYOrigin <= (carrot.getCarrotY() + 190)) && carrot.getVisible()) {
-                if (soundEffectsOn)
-                    sound.playHitSound();
-                bunny.setInvincible(true);
-                carrot.setVisible(false);
-                carrot.setCarrotLive(false);
-
-                int newRandCarrotX = random.nextInt(720 - 25) + 1;
-                carrot.setCarrotX(newRandCarrotX);
-                carrot.setCarrotY(-80);
-            }
-
-            //Balloon collision code
-            if ((bunnyXOrigin >= (balloon.getBalloonX() - 30)) && (bunnyXOrigin <= (balloon.getBalloonX() + 80)) && ((bunnyYOrigin + 50) >= (balloon.getBalloonY())) && (bunnyYOrigin <= (balloon.getBalloonY() + 245)) && balloon.getVisible()) {
-                if (soundEffectsOn)
-                    sound.playHitSound();
-                bunny.addBunnyLife(1);
-                balloon.setVisible(false);
-                balloon.setBalloonLive(false);
-
-                int newRandBalloonX = random.nextInt(720 - 25) + 1;
-                balloon.setBalloonX(newRandBalloonX);
-                balloon.setBalloonY(-120);
-            }
+            //Collision code
+            collision(bunnyXOrigin, bunnyYOrigin, star1, star2, star3, star4, star5, star6, carrot, balloon);
 
             //Bunny invincibility code
             if (bunny.getInvincible()) {
@@ -384,7 +317,11 @@ public class GameActivity extends Activity {
                 canvas.drawText("Lives:" + bunny.getBunnyLives(), 10, 30, paint);
 
                 //Draw the bunny
-                canvas.drawBitmap(bunnyBitMap, bunny.getBunnyX(), bunny.getBunnyY(), paint);
+                if (bunny.getBunnyLives() == 1)
+                    canvas.drawBitmap(bunnyBitMap1, bunny.getBunnyX(), bunny.getBunnyY(), paint);
+
+                if (bunny.getBunnyLives() == 2)
+                    canvas.drawBitmap(bunnyBitMap2, bunny.getBunnyX(), bunny.getBunnyY(), paint);
 
                 //draw the stars if they are set to visible
                 if (star1.getVisible())
@@ -519,7 +456,9 @@ public class GameActivity extends Activity {
 
         //Load and scale bitmaps
         backgroundBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.background_flat_720x1280);
-        bunnyBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.bunny_balloon_83x258);
+        bunnyBitMap1 = BitmapFactory.decodeResource(getResources(), R.drawable.bunny_balloon_83x258);
+        bunnyBitMap2 = BitmapFactory.decodeResource(getResources(), R.drawable.bunny_balloons_2);
+        //bunnyBitMap1 = BitmapFactory.decodeResource(getResources(), R.drawable.bunny_balloon_83x258);
         starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star_226x224);
         carrotBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.carrots);
         balloonBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.balloon);
@@ -527,11 +466,12 @@ public class GameActivity extends Activity {
 
         //scale the bitmaps to match the block size
         backgroundBitMap = Bitmap.createScaledBitmap(backgroundBitMap, 720, 1280, false);
-        bunnyBitMap = Bitmap.createScaledBitmap(bunnyBitMap, 80, 200, false);
+        bunnyBitMap1 = Bitmap.createScaledBitmap(bunnyBitMap1, 80, 200, false);
+        bunnyBitMap2 = Bitmap.createScaledBitmap(bunnyBitMap2, 80, 200, false);
+        //bunnyBitMap3 = Bitmap.createScaledBitmap(bunnyBitMap1, 80, 200, false);
         starBitmap = Bitmap.createScaledBitmap(starBitmap, 200, 200, false);
         carrotBitmap = Bitmap.createScaledBitmap(carrotBitmap, 65, 65, false);
         balloonBitmap = Bitmap.createScaledBitmap(balloonBitmap, 50, 120, false);
-
     }
 
     public void setStarPosition(Star star) {
@@ -555,5 +495,155 @@ public class GameActivity extends Activity {
     public void increaseStarSpeed(Star star, int time) {
         if (time % 15 == 0 && star.getStarSpeed() <= 15)
             star.addStarSpeed(0.0125);
+    }
+
+    public void collision(double bunnyXOrigin, double bunnyYOrigin, Star star1, Star star2, Star star3, Star star4, Star star5, Star star6, Carrot carrot, Balloon balloon) {
+        if (bunny.getBunnyLives() == 1) {
+            if (!bunny.getInvincible()) {
+                if ((bunnyXOrigin >= (star1.getStarX() + 40) && bunnyXOrigin <= star1.getStarX() + 170) && ((bunnyYOrigin + 50) >= star1.getStarY() + 75 && bunnyYOrigin <= (star1.getStarY() + 75) + 180) && star1.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star1.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star2.getStarX() + 40) && bunnyXOrigin <= star2.getStarX() + 170) && ((bunnyYOrigin + 50) >= star2.getStarY() + 75 && bunnyYOrigin <= (star2.getStarY() + 75) + 180) && star2.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star2.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star3.getStarX() + 40) && bunnyXOrigin <= star3.getStarX() + 170) && ((bunnyYOrigin + 50) >= star3.getStarY() + 75 && bunnyYOrigin <= (star3.getStarY() + 75) + 180) && star3.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star3.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star4.getStarX() + 40) && bunnyXOrigin <= star4.getStarX() + 170) && ((bunnyYOrigin + 50) >= star4.getStarY() + 75 && bunnyYOrigin <= (star4.getStarY() + 75) + 180) && star4.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star4.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star5.getStarX() + 40) && bunnyXOrigin <= star5.getStarX() + 170) && ((bunnyYOrigin + 50) >= star5.getStarY() + 75 && bunnyYOrigin <= (star5.getStarY() + 75) + 180) && star5.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star5.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star6.getStarX() + 40) && bunnyXOrigin <= star6.getStarX() + 170) && ((bunnyYOrigin + 50) >= star6.getStarY() + 75 && bunnyYOrigin <= (star6.getStarY() + 75) + 180) && star6.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star6.setVisible(false);
+                }
+            }
+
+            //Carrot collision code
+            if ((bunnyXOrigin >= (carrot.getCarrotX() - 30)) && (bunnyXOrigin <= (carrot.getCarrotX() + 100)) && ((bunnyYOrigin + 50) >= (carrot.getCarrotY())) && (bunnyYOrigin <= (carrot.getCarrotY() + 190)) && carrot.getVisible()) {
+                if (soundEffectsOn)
+                    sound.playHitSound();
+                bunny.setInvincible(true);
+                carrot.setVisible(false);
+                carrot.setCarrotLive(false);
+
+                int newRandCarrotX = random.nextInt(720 - 25) + 1;
+                carrot.setCarrotX(newRandCarrotX);
+                carrot.setCarrotY(-80);
+            }
+
+            //Balloon collision code
+            if ((bunnyXOrigin >= (balloon.getBalloonX() - 30)) && (bunnyXOrigin <= (balloon.getBalloonX() + 80)) && ((bunnyYOrigin + 50) >= (balloon.getBalloonY())) && (bunnyYOrigin <= (balloon.getBalloonY() + 245)) && balloon.getVisible()) {
+                if (soundEffectsOn)
+                    sound.playHitSound();
+                bunny.addBunnyLife(1);
+                balloon.setVisible(false);
+                balloon.setBalloonLive(false);
+
+                int newRandBalloonX = random.nextInt(720 - 25) + 1;
+                balloon.setBalloonX(newRandBalloonX);
+                balloon.setBalloonY(-120);
+            }
+        }
+
+        if (bunny.getBunnyLives() == 2) {
+            if (!bunny.getInvincible()) {
+                if ((bunnyXOrigin >= (star1.getStarX() + 50) && bunnyXOrigin <= star1.getStarX() + 180) && ((bunnyYOrigin + 50) >= star1.getStarY() + 75 && bunnyYOrigin <= (star1.getStarY() + 75) + 180) && star1.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star1.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star2.getStarX() + 50) && bunnyXOrigin <= star2.getStarX() + 180) && ((bunnyYOrigin + 50) >= star2.getStarY() + 75 && bunnyYOrigin <= (star2.getStarY() + 75) + 180) && star2.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star2.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star3.getStarX() + 50) && bunnyXOrigin <= star3.getStarX() + 180) && ((bunnyYOrigin + 50) >= star3.getStarY() + 75 && bunnyYOrigin <= (star3.getStarY() + 75) + 180) && star3.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star3.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star4.getStarX() + 50) && bunnyXOrigin <= star4.getStarX() + 180) && ((bunnyYOrigin + 50) >= star4.getStarY() + 75 && bunnyYOrigin <= (star4.getStarY() + 75) + 180) && star4.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star4.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star5.getStarX() + 50) && bunnyXOrigin <= star5.getStarX() + 180) && ((bunnyYOrigin + 50) >= star5.getStarY() + 75 && bunnyYOrigin <= (star5.getStarY() + 75) + 180) && star5.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star5.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star6.getStarX() + 50) && bunnyXOrigin <= star6.getStarX() + 180) && ((bunnyYOrigin + 50) >= star6.getStarY() + 75 && bunnyYOrigin <= (star6.getStarY() + 75) + 180) && star6.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star6.setVisible(false);
+                }
+            }
+
+            //Carrot collision code
+            if ((bunnyXOrigin >= (carrot.getCarrotX() - 30)) && (bunnyXOrigin <= (carrot.getCarrotX() + 100)) && ((bunnyYOrigin + 50) >= (carrot.getCarrotY())) && (bunnyYOrigin <= (carrot.getCarrotY() + 190)) && carrot.getVisible()) {
+                if (soundEffectsOn)
+                    sound.playHitSound();
+                bunny.setInvincible(true);
+                carrot.setVisible(false);
+                carrot.setCarrotLive(false);
+
+                int newRandCarrotX = random.nextInt(720 - 25) + 1;
+                carrot.setCarrotX(newRandCarrotX);
+                carrot.setCarrotY(-80);
+            }
+
+            //Balloon collision code
+            if ((bunnyXOrigin >= (balloon.getBalloonX() - 30)) && (bunnyXOrigin <= (balloon.getBalloonX() + 80)) && ((bunnyYOrigin + 50) >= (balloon.getBalloonY())) && (bunnyYOrigin <= (balloon.getBalloonY() + 245)) && balloon.getVisible()) {
+                if (soundEffectsOn)
+                    sound.playHitSound();
+                bunny.addBunnyLife(1);
+                balloon.setVisible(false);
+                balloon.setBalloonLive(false);
+
+                int newRandBalloonX = random.nextInt(720 - 25) + 1;
+                balloon.setBalloonX(newRandBalloonX);
+                balloon.setBalloonY(-120);
+            }
+        }
+
+        if (bunny.getBunnyLives() == 3) {
+
+        }
     }
 }

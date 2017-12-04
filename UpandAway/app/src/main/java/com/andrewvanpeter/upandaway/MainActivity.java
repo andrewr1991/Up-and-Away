@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_main);
@@ -38,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         Intent settingsData = getIntent();
         final int difficulty = settingsData.getIntExtra("Difficulty", 0);
-        final Boolean soundFXOn = settingsData.getBooleanExtra("soundFX", false);
-        final Boolean musicOn = settingsData.getBooleanExtra("music", false);
+        final Boolean soundFXOn = settingsData.getBooleanExtra("soundFX", true);
+        final Boolean musicOn = settingsData.getBooleanExtra("music", true);
 
         //Listener for playButton
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //start SettingsActivity
                 settings.putExtra("Difficulty", difficulty);
-                settings.putExtra("soundFx", soundFXOn);
+                settings.putExtra("soundFX", soundFXOn);
                 settings.putExtra("music", musicOn);
                 startActivity(settings);
             }
