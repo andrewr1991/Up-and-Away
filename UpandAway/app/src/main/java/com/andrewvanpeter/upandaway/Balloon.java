@@ -3,7 +3,7 @@ package com.andrewvanpeter.upandaway;
 public class Balloon {
     private float balloonX;
     private float balloonY;
-    private double balloonSpeed = 10;
+    private double balloonSpeed = 9;
     private Boolean balloonLive = false;
     private Boolean visible = true;
     private Boolean balloonStart = true;

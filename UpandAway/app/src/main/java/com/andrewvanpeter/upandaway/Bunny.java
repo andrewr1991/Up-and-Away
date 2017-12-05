@@ -34,6 +34,10 @@ public class Bunny {
         lives += life;
     }
 
+    public void death() {
+        lives = 0;
+    }
+
     public Boolean getBunnyIsMovingRight() {
         return bunnyIsMovingRight;
     }

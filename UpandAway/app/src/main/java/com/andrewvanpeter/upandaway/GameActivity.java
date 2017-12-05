@@ -175,26 +175,47 @@ public class GameActivity extends Activity {
 
         public void updateGame() {
             if (bunny.getBunnyLives() == 0) {
-                musicOn = false;
+                music.stop();
             }
 
-            if (time >= 4)
-                star1.setStarLive(true);
+            if (bunny.getBunnyLives() != 0) {
+                if (time >= 4)
+                    star1.setStarLive(true);
 
-            if (time >= 7)
-                star2.setStarLive(true);
+                if (time >= 7)
+                    star2.setStarLive(true);
 
-            if (time >= 10)
-                star3.setStarLive(true);
+                if (time >= 10)
+                    star3.setStarLive(true);
 
-            if (time >= 13)
-                star4.setStarLive(true);
+                if (time >= 13)
+                    star4.setStarLive(true);
 
-            if (time >= 16)
-                star5.setStarLive(true);
+                if (time >= 16)
+                    star5.setStarLive(true);
 
-            if (time >= 19)
-                star6.setStarLive(true);
+                if (time >= 19)
+                    star6.setStarLive(true);
+
+                //Star movement code
+                if (star1.getStarLive())
+                    star1.addStarY(star1.getStarSpeed());
+
+                if (star2.getStarLive())
+                    star2.addStarY(star2.getStarSpeed());
+
+                if (star3.getStarLive())
+                    star3.addStarY(star3.getStarSpeed());
+
+                if (star4.getStarLive())
+                    star4.addStarY(star4.getStarSpeed());
+
+                if (star5.getStarLive())
+                    star5.addStarY(star5.getStarSpeed());
+
+                if (star6.getStarLive())
+                    star6.addStarY(star6.getStarSpeed());
+            }
 
             if (carrot.getCarrotStart())
                 if (time >= carrotSpawnTime) {
@@ -256,7 +277,7 @@ public class GameActivity extends Activity {
                 }
             }
 
-            //Balloon respawn code
+            //Black hole respawn code
             if (blackhole.getBlackholeY() == (-135)) {
                 while (blackholeLoop) {
                     int timer = time;
@@ -280,25 +301,6 @@ public class GameActivity extends Activity {
             if (blackhole.getBlackholeY() >= 1700) {
                 blackhole.setBlackholeY(-135);
             }
-
-            //Star movement code
-            if (star1.getStarLive())
-                star1.addStarY(star1.getStarSpeed());
-
-            if (star2.getStarLive())
-                star2.addStarY(star2.getStarSpeed());
-
-            if (star3.getStarLive())
-                star3.addStarY(star3.getStarSpeed());
-
-            if (star4.getStarLive())
-                star4.addStarY(star4.getStarSpeed());
-
-            if (star5.getStarLive())
-                star5.addStarY(star5.getStarSpeed());
-
-            if (star6.getStarLive())
-                star6.addStarY(star6.getStarSpeed());
 
             //Carrot movement code
             if (carrot.getCarrotLive()) {
@@ -370,6 +372,20 @@ public class GameActivity extends Activity {
             if (bunnyXOrigin <= 50) {
                 bunny.setBunnyIsMovingLeft(false);
             }
+
+            //End game code
+            if (bunny.getBunnyLives() == 0) {
+                star1.setStarLive(false);
+                star1.setStarLive(false);
+                star1.setStarLive(false);
+                star1.setStarLive(false);
+                star1.setStarLive(false);
+                star1.setStarLive(false);
+                carrot.setCarrotLive(false);
+                balloon.setBalloonLive(false);
+                blackhole.setBlackholeLive(false);
+                musicOn = false;
+            }
         }
 
         public void drawGame() {
@@ -385,6 +401,11 @@ public class GameActivity extends Activity {
                 canvas.drawText("Score:" + time, 10, topGap - 6, paint);
                 canvas.drawText("Lives:" + bunny.getBunnyLives(), 10, 30, paint);
 
+                if (bunny.getInvincible()) {
+                    canvas.drawText("Invincible", 10, 125, paint);
+                }
+
+
                 //Start game caption
                 if (time == 1) {
                     canvas.drawText("3", screenWidth / 2, screenHeight / 2, paint);
@@ -399,7 +420,7 @@ public class GameActivity extends Activity {
                 }
 
                 if (time == 4) {
-                    canvas.drawText("Start!", (screenWidth / 2) - 10, screenHeight / 2, paint);
+                    canvas.drawText("Start!", (screenWidth / 2) - 50, screenHeight / 2, paint);
                 }
 
                 //Draw the bunny
@@ -442,6 +463,11 @@ public class GameActivity extends Activity {
 
                 if (blackhole.getVisible()) {
                     canvas.drawBitmap(blackholeBitmap, blackhole.getBlackholeX(), blackhole.getBlackholeY(), paint);
+                }
+
+                //End game drawing code
+                if (bunny.getBunnyLives() == 0) {
+                    canvas.drawText("Game Over!", (screenWidth / 2) - 120, screenHeight / 2, paint);
                 }
 
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -673,6 +699,8 @@ public class GameActivity extends Activity {
                 int newRandBlackholeX = random.nextInt(600 - 10) + 1;
                 blackhole.setBlackholeX(newRandBlackholeX);
                 blackhole.setBlackholeY(-135);
+
+                bunny.death();
             }
         }
 
@@ -751,6 +779,8 @@ public class GameActivity extends Activity {
                 int newRandBlackholeX = random.nextInt(600 - 10) + 1;
                 blackhole.setBlackholeX(newRandBlackholeX);
                 blackhole.setBlackholeY(-135);
+
+                bunny.death();
             }
         }
 
@@ -828,6 +858,8 @@ public class GameActivity extends Activity {
                 int newRandBlackholeX = random.nextInt(600 - 10) + 1;
                 blackhole.setBlackholeX(newRandBlackholeX);
                 blackhole.setBlackholeY(-135);
+
+                bunny.death();
             }
         }
     }

@@ -3,7 +3,7 @@ package com.andrewvanpeter.upandaway;
 public class Carrot {
     private float carrotX;
     private float carrotY;
-    private double carrotSpeed = 10;
+    private double carrotSpeed = 9;
     private Boolean carrotLive = false;
     private Boolean visible = true;
     private Boolean carrotStart = true;

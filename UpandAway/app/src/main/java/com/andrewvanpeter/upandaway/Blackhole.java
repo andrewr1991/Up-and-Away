@@ -3,7 +3,7 @@ package com.andrewvanpeter.upandaway;
 public class Blackhole {
     private float blackholeX;
     private float blackholeY;
-    private double blackholeSpeed = 10;
+    private double blackholeSpeed = 9;
     private Boolean blackholeLive = false;
     private Boolean visible = true;
     private Boolean blackholeStart = true;
