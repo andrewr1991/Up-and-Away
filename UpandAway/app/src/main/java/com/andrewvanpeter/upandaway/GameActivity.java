@@ -102,6 +102,7 @@ public class GameActivity extends Activity {
     //Timer variable
     int time = 0;
     int timer = 0;
+    int score = 0;
     Boolean timeLoop = true;
     Boolean carrotLoop = true;
     Boolean balloonLoop = true;
@@ -181,6 +182,8 @@ public class GameActivity extends Activity {
             }
 
             if (bunny.getBunnyLives() != 0) {
+                score = time;
+
                 if (time >= 4)
                     star1.setStarLive(true);
 
@@ -400,7 +403,7 @@ public class GameActivity extends Activity {
                 paint.setColor(Color.argb(255, 255, 255, 255));
                 paint.setTextSize(topGap / 2);
 
-                canvas.drawText("Score:" + time, 10, topGap - 6, paint);
+                canvas.drawText("Score:" + score, 10, topGap - 6, paint);
                 canvas.drawText("Lives:" + bunny.getBunnyLives(), 10, 30, paint);
 
                 if (bunny.getInvincible()) {
