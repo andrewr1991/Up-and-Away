@@ -3,7 +3,7 @@ package com.andrewvanpeter.upandaway;
 public class Bunny {
     private float bunnyX;
     private float bunnyY;
-    private int lives = 2;
+    private int lives = 3;
     private Boolean bunnyIsMovingRight = false;
     private Boolean bunnyIsMovingLeft = false;
     private Boolean invincible = false;

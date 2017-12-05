@@ -15,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
     Intent game;
     Intent help;
     Intent settings;
+    Boolean musicOn;
+    Boolean soundFXOn;
+    int difficulty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
         final Button settingsButton = (Button) findViewById(R.id.settingsButton);
 
         Intent settingsData = getIntent();
-        final int difficulty = settingsData.getIntExtra("Difficulty", 0);
-        final Boolean soundFXOn = settingsData.getBooleanExtra("soundFX", true);
-        final Boolean musicOn = settingsData.getBooleanExtra("music", true);
+        difficulty = settingsData.getIntExtra("Difficulty", 0);
+        soundFXOn = settingsData.getBooleanExtra("soundFX", true);
+        musicOn = settingsData.getBooleanExtra("music", true);
 
         //Listener for playButton
         playButton.setOnClickListener(new View.OnClickListener() {

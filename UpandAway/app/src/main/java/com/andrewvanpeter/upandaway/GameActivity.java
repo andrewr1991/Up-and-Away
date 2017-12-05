@@ -19,8 +19,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,33 +32,37 @@ public class GameActivity extends Activity {
     MediaPlayer music;
 
     Bunny bunny = new Bunny (320, 890);
+    int bunnyInvincibleTime = 10;
 
     int startingAIY = -250;
     Random random = new Random();
 
-    int randStarX1 = random.nextInt(720 - 25) + 1;
+    int randStarX1 = random.nextInt(600 - 10) + 1;
     Star star1 = new Star(randStarX1, startingAIY);
 
-    int randStarX2 = random.nextInt(720 - 25) + 1;
+    int randStarX2 = random.nextInt(600 - 10) + 1;
     Star star2 = new Star(randStarX2, startingAIY);
 
-    int randStarX3 = random.nextInt(720 - 25) + 1;
+    int randStarX3 = random.nextInt(600 - 10) + 1;
     Star star3 = new Star(randStarX3, startingAIY);
 
-    int randStarX4 = random.nextInt(720 - 25) + 1;
+    int randStarX4 = random.nextInt(600 - 10) + 1;
     Star star4 = new Star(randStarX4, startingAIY);
 
-    int randStarX5 = random.nextInt(720 - 25) + 1;
+    int randStarX5 = random.nextInt(600 - 10) + 1;
     Star star5 = new Star(randStarX5, startingAIY);
 
-    int randStarX6 = random.nextInt(720 - 25) + 1;
+    int randStarX6 = random.nextInt(600 - 10) + 1;
     Star star6 = new Star(randStarX6, startingAIY);
 
-    int randCarrotX = random.nextInt(720 - 25) + 1;
+    int randCarrotX = random.nextInt(600 - 10) + 1;
     Carrot carrot = new Carrot(randCarrotX, -70);
 
-    int randBalloonX = random.nextInt(720 - 25) + 1;
-    Balloon balloon = new Balloon(350, -120);
+    int randBalloonX = random.nextInt(600 - 10) + 1;
+    Balloon balloon = new Balloon(randBalloonX, -120);
+
+    int randBlackholeX = random.nextInt(600 - 10) + 1;
+    Blackhole blackhole = new Blackhole(randBlackholeX, -130);
 
     Bitmap bunnyBitMap1;
     Bitmap bunnyBitMap2;
@@ -70,6 +72,12 @@ public class GameActivity extends Activity {
     Bitmap carrotBitmap;
     Bitmap balloonBitmap;
     Bitmap blackholeBitmap;
+    Bitmap menuBitmap;
+
+    //Spawn time variables
+    int carrotSpawnTime = 20;
+    int balloonSpawnTime = 30;
+    int blackholeSpawnTime = 60;
 
     int screenWidth;
     int screenHeight;
@@ -78,6 +86,9 @@ public class GameActivity extends Activity {
     //sound settings
     Boolean soundEffectsOn;
     Boolean musicOn;
+
+    //Difficulty settings
+    int difficulty;
 
     //stats
     long lastFrameTime;
@@ -94,6 +105,7 @@ public class GameActivity extends Activity {
     Boolean timeLoop = true;
     Boolean carrotLoop = true;
     Boolean balloonLoop = true;
+    Boolean blackholeLoop = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +128,7 @@ public class GameActivity extends Activity {
         }, delay, period);
 
         Intent settingsData = getIntent();
-        final int difficulty = settingsData.getIntExtra("Difficulty", 1);
+        difficulty = settingsData.getIntExtra("Difficulty", 1);
         soundEffectsOn = settingsData.getBooleanExtra("soundFX", true);
         musicOn = settingsData.getBooleanExtra("music", true);
 
@@ -128,9 +140,15 @@ public class GameActivity extends Activity {
         //Set difficulty other than easy
         if (difficulty == 2) {
             setStarSpeed(12);
+            carrotSpawnTime = 30;
+            balloonSpawnTime = 45;
+            blackholeSpawnTime = 40;
         }
         else if (difficulty == 3) {
             setStarSpeed(14);
+            carrotSpawnTime = 40;
+            balloonSpawnTime = 60;
+            blackholeSpawnTime = 20;
         }
     }
 
@@ -179,15 +197,21 @@ public class GameActivity extends Activity {
                 star6.setStarLive(true);
 
             if (carrot.getCarrotStart())
-                if (time >= 30) {
+                if (time >= carrotSpawnTime) {
                     carrot.setCarrotLive(true);
                     carrot.setCarrotStart(false);
                 }
 
             if (balloon.getBalloonStart())
-                if (time >= 45) {
+                if (time >= balloonSpawnTime) {
                     balloon.setBalloonLive(true);
                     balloon.setBalloonStart(false);
+                }
+
+            if (blackhole.getBlackholeStart())
+                if (time >= blackholeSpawnTime) {
+                    blackhole.setBlackholeLive(true);
+                    blackhole.setBlackholeStart(false);
                 }
 
             double bunnyXOrigin = bunny.getBunnyX() + 41;
@@ -202,7 +226,7 @@ public class GameActivity extends Activity {
                     timer = time;
                     timeLoop = false;
                 }
-                if ((time - timer) == 10) {
+                if ((time - timer) == bunnyInvincibleTime) {
                     bunny.setInvincible(false);
                     timeLoop = true;
                 }
@@ -214,7 +238,7 @@ public class GameActivity extends Activity {
                     int timer = time;
                     carrotLoop = false;
                 }
-                if ((time - timer) == 30) {
+                if ((time - timer) == carrotSpawnTime) {
                     carrot.setCarrotLive(true);
                     carrotLoop = true;
                 }
@@ -226,10 +250,35 @@ public class GameActivity extends Activity {
                     int timer = time;
                     balloonLoop = false;
                 }
-                if ((time - timer) == 45) {
+                if ((time - timer) == balloonSpawnTime) {
                     balloon.setBalloonLive(true);
                     balloonLoop = true;
                 }
+            }
+
+            //Balloon respawn code
+            if (blackhole.getBlackholeY() == (-135)) {
+                while (blackholeLoop) {
+                    int timer = time;
+                    blackholeLoop = false;
+                }
+                if ((time - timer) == blackholeSpawnTime) {
+                    blackhole.setBlackholeLive(true);
+                    blackholeLoop = true;
+                }
+            }
+
+            //If carrot, balloon, or black hole misses bunny
+            if (carrot.getCarrotY() >= 1700) {
+                carrot.setCarrotY(-80);
+            }
+
+            if (balloon.getBalloonY() >= 1700) {
+                balloon.setBalloonY(-120);
+            }
+
+            if (blackhole.getBlackholeY() >= 1700) {
+                blackhole.setBlackholeY(-135);
             }
 
             //Star movement code
@@ -261,6 +310,11 @@ public class GameActivity extends Activity {
             if (balloon.getBalloonLive()) {
                 balloon.addBalloonY(balloon.getBalloonSpeed());
                 balloon.setVisible(true);
+            }
+
+            if (blackhole.getBlackholeLive()) {
+                blackhole.addBlackholeY(blackhole.getBlackholeSpeed());
+                blackhole.setVisible(true);
             }
 
             increaseStarSpeed(star1, time);
@@ -326,10 +380,27 @@ public class GameActivity extends Activity {
                 canvas.drawBitmap(backgroundBitMap, 0, 0, paint);
 
                 paint.setColor(Color.argb(255, 255, 255, 255));
-                paint.setTextSize(topGap/2);
+                paint.setTextSize(topGap / 2);
 
-                canvas.drawText("Score:" + time, 10, topGap-6, paint);
+                canvas.drawText("Score:" + time, 10, topGap - 6, paint);
                 canvas.drawText("Lives:" + bunny.getBunnyLives(), 10, 30, paint);
+
+                //Start game caption
+                if (time == 1) {
+                    canvas.drawText("3", screenWidth / 2, screenHeight / 2, paint);
+                }
+
+                if (time == 2) {
+                    canvas.drawText("2", screenWidth / 2, screenHeight / 2, paint);
+                }
+
+                if (time == 3) {
+                    canvas.drawText("1", screenWidth / 2, screenHeight / 2, paint);
+                }
+
+                if (time == 4) {
+                    canvas.drawText("Start!", (screenWidth / 2) - 10, screenHeight / 2, paint);
+                }
 
                 //Draw the bunny
                 if (bunny.getBunnyLives() == 1)
@@ -337,6 +408,10 @@ public class GameActivity extends Activity {
 
                 if (bunny.getBunnyLives() == 2)
                     canvas.drawBitmap(bunnyBitMap2, bunny.getBunnyX(), bunny.getBunnyY(), paint);
+
+                if (bunny.getBunnyLives() == 3) {
+                    canvas.drawBitmap(bunnyBitMap3, bunny.getBunnyX(), bunny.getBunnyY(), paint);
+                }
 
                 //draw the stars if they are set to visible
                 if (star1.getVisible())
@@ -364,6 +439,10 @@ public class GameActivity extends Activity {
                 //Draw the balloon if it is set to visible
                 if (balloon.getVisible())
                     canvas.drawBitmap(balloonBitmap, balloon.getBalloonX(), balloon.getBalloonY(), paint);
+
+                if (blackhole.getVisible()) {
+                    canvas.drawBitmap(blackholeBitmap, blackhole.getBlackholeX(), blackhole.getBlackholeY(), paint);
+                }
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }
@@ -431,16 +510,19 @@ public class GameActivity extends Activity {
         }
         finish();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         bunnyView.resume();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         bunnyView.pause();
     }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             bunnyView.pause();
@@ -473,25 +555,28 @@ public class GameActivity extends Activity {
         backgroundBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.background_flat_720x1280);
         bunnyBitMap1 = BitmapFactory.decodeResource(getResources(), R.drawable.bunny_balloon_83x258);
         bunnyBitMap2 = BitmapFactory.decodeResource(getResources(), R.drawable.bunny_balloons_2);
-        //bunnyBitMap1 = BitmapFactory.decodeResource(getResources(), R.drawable.bunny_balloon_83x258);
+        bunnyBitMap3 = BitmapFactory.decodeResource(getResources(), R.drawable.bunny_balloons_3);
         starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star_226x224);
         carrotBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.carrots);
         balloonBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.balloon);
-
+        blackholeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blackhole);
+        menuBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pausemenu_menuup);
 
         //scale the bitmaps to match the block size
         backgroundBitMap = Bitmap.createScaledBitmap(backgroundBitMap, 720, 1280, false);
         bunnyBitMap1 = Bitmap.createScaledBitmap(bunnyBitMap1, 80, 200, false);
         bunnyBitMap2 = Bitmap.createScaledBitmap(bunnyBitMap2, 80, 200, false);
-        //bunnyBitMap3 = Bitmap.createScaledBitmap(bunnyBitMap1, 80, 200, false);
-        starBitmap = Bitmap.createScaledBitmap(starBitmap, 200, 200, false);
+        bunnyBitMap3 = Bitmap.createScaledBitmap(bunnyBitMap3, 80, 200, false);
+        starBitmap = Bitmap.createScaledBitmap(starBitmap, 220, 220, false);
         carrotBitmap = Bitmap.createScaledBitmap(carrotBitmap, 65, 65, false);
         balloonBitmap = Bitmap.createScaledBitmap(balloonBitmap, 50, 120, false);
+        blackholeBitmap = Bitmap.createScaledBitmap(blackholeBitmap, 70, 70, false);
+        menuBitmap = Bitmap.createScaledBitmap(menuBitmap, 100, 50, false);
     }
 
     public void setStarPosition(Star star) {
         Random random = new Random();
-        int starX = random.nextInt(720 - 25) + 1;
+        int starX = random.nextInt(600 - 10) + 1;
         int starY = -250;
 
         star.setStarX(starX);
@@ -508,7 +593,7 @@ public class GameActivity extends Activity {
     }
 
     public void increaseStarSpeed(Star star, int time) {
-        if (time % 15 == 0 && star.getStarSpeed() <= 15)
+        if (time % 10 == 0 && star.getStarSpeed() <= 15)
             star.addStarSpeed(0.0125);
     }
 
@@ -560,28 +645,34 @@ public class GameActivity extends Activity {
 
             //Carrot collision code
             if ((bunnyXOrigin >= (carrot.getCarrotX() - 30)) && (bunnyXOrigin <= (carrot.getCarrotX() + 100)) && ((bunnyYOrigin + 50) >= (carrot.getCarrotY())) && (bunnyYOrigin <= (carrot.getCarrotY() + 190)) && carrot.getVisible()) {
-                if (soundEffectsOn)
-                    sound.playHitSound();
                 bunny.setInvincible(true);
                 carrot.setVisible(false);
                 carrot.setCarrotLive(false);
 
-                int newRandCarrotX = random.nextInt(720 - 25) + 1;
+                int newRandCarrotX = random.nextInt(600 - 10) + 1;
                 carrot.setCarrotX(newRandCarrotX);
                 carrot.setCarrotY(-80);
             }
 
             //Balloon collision code
             if ((bunnyXOrigin >= (balloon.getBalloonX() - 30)) && (bunnyXOrigin <= (balloon.getBalloonX() + 80)) && ((bunnyYOrigin + 50) >= (balloon.getBalloonY())) && (bunnyYOrigin <= (balloon.getBalloonY() + 245)) && balloon.getVisible()) {
-                if (soundEffectsOn)
-                    sound.playHitSound();
-                bunny.addBunnyLife(1);
+                if (bunny.getBunnyLives() < 3)
+                    bunny.addBunnyLife(1);
                 balloon.setVisible(false);
                 balloon.setBalloonLive(false);
 
-                int newRandBalloonX = random.nextInt(720 - 25) + 1;
+                int newRandBalloonX = random.nextInt(600 - 10) + 1;
                 balloon.setBalloonX(newRandBalloonX);
                 balloon.setBalloonY(-120);
+            }
+
+            if ((bunnyXOrigin >= (blackhole.getBlackholeX() - 30)) && (bunnyXOrigin <= (blackhole.getBlackholeX() + 100)) && ((bunnyYOrigin + 50) >= (blackhole.getBlackholeY())) && (bunnyYOrigin <= (blackhole.getBlackholeY() + 190)) && blackhole.getVisible()) {
+                blackhole.setVisible(false);
+                blackhole.setBlackholeLive(false);
+
+                int newRandBlackholeX = random.nextInt(600 - 10) + 1;
+                blackhole.setBlackholeX(newRandBlackholeX);
+                blackhole.setBlackholeY(-135);
             }
         }
 
@@ -632,33 +723,112 @@ public class GameActivity extends Activity {
 
             //Carrot collision code
             if ((bunnyXOrigin >= (carrot.getCarrotX() - 30)) && (bunnyXOrigin <= (carrot.getCarrotX() + 100)) && ((bunnyYOrigin + 50) >= (carrot.getCarrotY())) && (bunnyYOrigin <= (carrot.getCarrotY() + 190)) && carrot.getVisible()) {
-                if (soundEffectsOn)
-                    sound.playHitSound();
                 bunny.setInvincible(true);
                 carrot.setVisible(false);
                 carrot.setCarrotLive(false);
 
-                int newRandCarrotX = random.nextInt(720 - 25) + 1;
+                int newRandCarrotX = random.nextInt(600 - 10) + 1;
                 carrot.setCarrotX(newRandCarrotX);
                 carrot.setCarrotY(-80);
             }
 
             //Balloon collision code
             if ((bunnyXOrigin >= (balloon.getBalloonX() - 30)) && (bunnyXOrigin <= (balloon.getBalloonX() + 80)) && ((bunnyYOrigin + 50) >= (balloon.getBalloonY())) && (bunnyYOrigin <= (balloon.getBalloonY() + 245)) && balloon.getVisible()) {
-                if (soundEffectsOn)
-                    sound.playHitSound();
-                bunny.addBunnyLife(1);
+                if (bunny.getBunnyLives() < 3)
+                    bunny.addBunnyLife(1);
                 balloon.setVisible(false);
                 balloon.setBalloonLive(false);
 
-                int newRandBalloonX = random.nextInt(720 - 25) + 1;
+                int newRandBalloonX = random.nextInt(600 - 10) + 1;
                 balloon.setBalloonX(newRandBalloonX);
                 balloon.setBalloonY(-120);
+            }
+
+            if ((bunnyXOrigin >= (blackhole.getBlackholeX() - 30)) && (bunnyXOrigin <= (blackhole.getBlackholeX() + 100)) && ((bunnyYOrigin + 50) >= (blackhole.getBlackholeY())) && (bunnyYOrigin <= (blackhole.getBlackholeY() + 190)) && blackhole.getVisible()) {
+                blackhole.setVisible(false);
+                blackhole.setBlackholeLive(false);
+
+                int newRandBlackholeX = random.nextInt(600 - 10) + 1;
+                blackhole.setBlackholeX(newRandBlackholeX);
+                blackhole.setBlackholeY(-135);
             }
         }
 
         if (bunny.getBunnyLives() == 3) {
+            if (!bunny.getInvincible()) {
+                if ((bunnyXOrigin >= (star1.getStarX() + 70) && bunnyXOrigin <= star1.getStarX() + 200) && ((bunnyYOrigin + 50) >= star1.getStarY() + 75 && bunnyYOrigin <= (star1.getStarY() + 75) + 180) && star1.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star1.setVisible(false);
+                }
 
+                if ((bunnyXOrigin >= (star2.getStarX() + 70) && bunnyXOrigin <= star2.getStarX() + 200) && ((bunnyYOrigin + 50) >= star2.getStarY() + 75 && bunnyYOrigin <= (star2.getStarY() + 75) + 180) && star2.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star2.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star3.getStarX() + 70) && bunnyXOrigin <= star3.getStarX() + 200) && ((bunnyYOrigin + 50) >= star3.getStarY() + 75 && bunnyYOrigin <= (star3.getStarY() + 75) + 180) && star3.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star3.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star4.getStarX() + 70) && bunnyXOrigin <= star4.getStarX() + 200) && ((bunnyYOrigin + 50) >= star4.getStarY() + 75 && bunnyYOrigin <= (star4.getStarY() + 75) + 180) && star4.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star4.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star5.getStarX() + 70) && bunnyXOrigin <= star5.getStarX() + 200) && ((bunnyYOrigin + 50) >= star5.getStarY() + 75 && bunnyYOrigin <= (star5.getStarY() + 75) + 180) && star5.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star5.setVisible(false);
+                }
+
+                if ((bunnyXOrigin >= (star6.getStarX() + 70) && bunnyXOrigin <= star6.getStarX() + 200) && ((bunnyYOrigin + 50) >= star6.getStarY() + 75 && bunnyYOrigin <= (star6.getStarY() + 75) + 180) && star6.getVisible()) {
+                    if (soundEffectsOn)
+                        sound.playHitSound();
+                    bunny.addBunnyLife(-1);
+                    star6.setVisible(false);
+                }
+            }
+
+            //Carrot collision code
+            if ((bunnyXOrigin >= (carrot.getCarrotX() - 30)) && (bunnyXOrigin <= (carrot.getCarrotX() + 100)) && ((bunnyYOrigin + 50) >= (carrot.getCarrotY())) && (bunnyYOrigin <= (carrot.getCarrotY() + 190)) && carrot.getVisible()) {
+                bunny.setInvincible(true);
+                carrot.setVisible(false);
+                carrot.setCarrotLive(false);
+
+                int newRandCarrotX = random.nextInt(600 - 10) + 1;
+                carrot.setCarrotX(newRandCarrotX);
+                carrot.setCarrotY(-80);
+            }
+
+            //Balloon collision code
+            if ((bunnyXOrigin >= (balloon.getBalloonX() - 30)) && (bunnyXOrigin <= (balloon.getBalloonX() + 80)) && ((bunnyYOrigin + 50) >= (balloon.getBalloonY())) && (bunnyYOrigin <= (balloon.getBalloonY() + 245)) && balloon.getVisible()) {
+                if (bunny.getBunnyLives() < 3)
+                    bunny.addBunnyLife(1);
+                balloon.setVisible(false);
+                balloon.setBalloonLive(false);
+
+                int newRandBalloonX = random.nextInt(600 - 10) + 1;
+                balloon.setBalloonX(newRandBalloonX);
+                balloon.setBalloonY(-120);
+            }
+            if ((bunnyXOrigin >= (blackhole.getBlackholeX() - 30)) && (bunnyXOrigin <= (blackhole.getBlackholeX() + 100)) && ((bunnyYOrigin + 50) >= (blackhole.getBlackholeY())) && (bunnyYOrigin <= (blackhole.getBlackholeY() + 190)) && blackhole.getVisible()) {
+                blackhole.setVisible(false);
+                blackhole.setBlackholeLive(false);
+
+                int newRandBlackholeX = random.nextInt(600 - 10) + 1;
+                blackhole.setBlackholeX(newRandBlackholeX);
+                blackhole.setBlackholeY(-135);
+            }
         }
     }
 }
