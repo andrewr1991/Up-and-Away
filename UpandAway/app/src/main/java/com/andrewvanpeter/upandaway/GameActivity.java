@@ -32,7 +32,7 @@ public class GameActivity extends Activity {
     MediaPlayer music;
 
     Bunny bunny = new Bunny (320, 890);
-    int bunnyInvincibleTime = 10;
+    int bunnyInvincibleTime = 15;
 
     int startingAIY = -250;
     Random random = new Random();
@@ -143,12 +143,14 @@ public class GameActivity extends Activity {
             carrotSpawnTime = 30;
             balloonSpawnTime = 45;
             blackholeSpawnTime = 40;
+            bunnyInvincibleTime = 12;
         }
         else if (difficulty == 3) {
             setStarSpeed(14);
             carrotSpawnTime = 40;
             balloonSpawnTime = 60;
             blackholeSpawnTime = 20;
+            bunnyInvincibleTime = 10;
         }
     }
 
@@ -408,66 +410,83 @@ public class GameActivity extends Activity {
 
                 //Start game caption
                 if (time == 1) {
-                    canvas.drawText("3", screenWidth / 2, screenHeight / 2, paint);
+                    canvas.drawText("3", screenWidth / 2,
+                            screenHeight / 2, paint);
                 }
 
                 if (time == 2) {
-                    canvas.drawText("2", screenWidth / 2, screenHeight / 2, paint);
+                    canvas.drawText("2", screenWidth / 2,
+                            screenHeight / 2, paint);
                 }
 
                 if (time == 3) {
-                    canvas.drawText("1", screenWidth / 2, screenHeight / 2, paint);
+                    canvas.drawText("1", screenWidth / 2,
+                            screenHeight / 2, paint);
                 }
 
                 if (time == 4) {
-                    canvas.drawText("Start!", (screenWidth / 2) - 50, screenHeight / 2, paint);
+                    canvas.drawText("Start!", (screenWidth / 2) - 50,
+                            screenHeight / 2, paint);
                 }
 
                 //Draw the bunny
                 if (bunny.getBunnyLives() == 1)
-                    canvas.drawBitmap(bunnyBitMap1, bunny.getBunnyX(), bunny.getBunnyY(), paint);
+                    canvas.drawBitmap(bunnyBitMap1, bunny.getBunnyX(),
+                            bunny.getBunnyY(), paint);
 
                 if (bunny.getBunnyLives() == 2)
-                    canvas.drawBitmap(bunnyBitMap2, bunny.getBunnyX(), bunny.getBunnyY(), paint);
+                    canvas.drawBitmap(bunnyBitMap2, bunny.getBunnyX(),
+                            bunny.getBunnyY(), paint);
 
                 if (bunny.getBunnyLives() == 3) {
-                    canvas.drawBitmap(bunnyBitMap3, bunny.getBunnyX(), bunny.getBunnyY(), paint);
+                    canvas.drawBitmap(bunnyBitMap3, bunny.getBunnyX(),
+                            bunny.getBunnyY(), paint);
                 }
 
                 //draw the stars if they are set to visible
                 if (star1.getVisible())
-                    canvas.drawBitmap(starBitmap, star1.getStarX(), star1.getStarY(), paint);
+                    canvas.drawBitmap(starBitmap, star1.getStarX(),
+                            star1.getStarY(), paint);
 
                 if (star2.getVisible())
-                    canvas.drawBitmap(starBitmap, star2.getStarX(), star2.getStarY(), paint);
+                    canvas.drawBitmap(starBitmap, star2.getStarX(),
+                            star2.getStarY(), paint);
 
                 if (star3.getVisible())
-                    canvas.drawBitmap(starBitmap, star3.getStarX(), star3.getStarY(), paint);
+                    canvas.drawBitmap(starBitmap, star3.getStarX(),
+                            star3.getStarY(), paint);
 
                 if (star4.getVisible())
-                    canvas.drawBitmap(starBitmap, star4.getStarX(), star4.getStarY(), paint);
+                    canvas.drawBitmap(starBitmap, star4.getStarX(),
+                            star4.getStarY(), paint);
 
                 if (star5.getVisible())
-                    canvas.drawBitmap(starBitmap, star5.getStarX(), star5.getStarY(), paint);
+                    canvas.drawBitmap(starBitmap, star5.getStarX(),
+                            star5.getStarY(), paint);
 
                 if (star6.getVisible())
-                    canvas.drawBitmap(starBitmap, star6.getStarX(), star6.getStarY(), paint);
+                    canvas.drawBitmap(starBitmap, star6.getStarX(),
+                            star6.getStarY(), paint);
 
                 //draw the carrot if it is set to visible
                 if (carrot.getVisible())
-                    canvas.drawBitmap(carrotBitmap, carrot.getCarrotX(), carrot.getCarrotY(), paint);
+                    canvas.drawBitmap(carrotBitmap, carrot.getCarrotX(),
+                            carrot.getCarrotY(), paint);
 
                 //Draw the balloon if it is set to visible
                 if (balloon.getVisible())
-                    canvas.drawBitmap(balloonBitmap, balloon.getBalloonX(), balloon.getBalloonY(), paint);
+                    canvas.drawBitmap(balloonBitmap, balloon.getBalloonX(),
+                            balloon.getBalloonY(), paint);
 
                 if (blackhole.getVisible()) {
-                    canvas.drawBitmap(blackholeBitmap, blackhole.getBlackholeX(), blackhole.getBlackholeY(), paint);
+                    canvas.drawBitmap(blackholeBitmap, blackhole.getBlackholeX(),
+                            blackhole.getBlackholeY(), paint);
                 }
 
                 //End game drawing code
                 if (bunny.getBunnyLives() == 0) {
-                    canvas.drawText("Game Over!", (screenWidth / 2) - 120, screenHeight / 2, paint);
+                    canvas.drawText("Game Over!", (screenWidth / 2) - 120,
+                            screenHeight / 2, paint);
                 }
 
                 ourHolder.unlockCanvasAndPost(canvas);
